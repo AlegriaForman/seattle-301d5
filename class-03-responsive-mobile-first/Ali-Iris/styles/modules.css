@@ -11,7 +11,7 @@
 /* TODO: Add styles for the icon-menu class. It should be bigger, and off to the right. */
 .icon-menu {
   float: right;
-  font-size: 3em;
+  font-size: 5em;
 }
 
 .main-nav {
@@ -70,6 +70,11 @@
     padding: 10px;
   }
   .main-nav li {
-    display: inline;
+    display: inline-block;
   }
+
+  .main-nav ul {
+    display: block;
+  }
+
 }
