@@ -39,46 +39,41 @@ Article.loadAll = function(rawData) {
   rawData.forEach(function(ele) {
     Article.all.push(new Article(ele));
   })
-};
+}
 
-Article.getAll = function() {
-  $.getJSON('data/hackerIpsum.json', function(data) {
-    localStorage.rawData = JSON.stringify(data);
-    Article.loadAll(data);
+Article.getAll = function(rawData) {
+  $.getJSON('data/hackerIpsum.json', function(rawData) {
+    console.log('loading json anew');
+    localStorage.rawData = JSON.stringify(rawData);
+    Article.loadAll(rawData);
     articleView.initIndexPage();
   });
-};
+}
 
 // This function will retrieve the data from either a local or remote source,
 // and process it, then hand off control to the View.
 Article.fetchAll = function() {
   if (localStorage.rawData) {
-    // When rawData is already in localStorage,
-    // we can load it with the .loadAll function above,
-    // and then render the index page (using the proper method on the articleView object).
-    $.ajax ({
+    $.ajax({
       type: 'HEAD',
       url: 'data/hackerIpsum.json',
-      success: function (data, message, xhr) {
-      console.log(xhr);
-      var eTag = xhr.getResponseHeader('eTag');
-      if (!localStorage.eTag || eTag !== localStorage.eTag) {
-      localStorage.eTag = eTag;
-    } else {
-      Article.loadAll(JSON.parse(localStorage.rawData));
+      success: function(data,message,xhr) {
+        console.log(xhr);
+        var eTag = xhr.getResponseHeader('eTag');
+        if(!localStorage.eTag || eTag !== localStorage.eTag) {
+          localStorage.eTag = eTag;
+          console.log('changed etag load');
+        } else {
+          Article.loadAll(JSON.parse(localStorage.rawData));
+          console.log('Loaded from LS');
+        }
+      }
+    });
 
-      articleView.initIndexPage(); //TODO: What method do we call to render the index page?
-
-    }
-  }
-});
+    Article.loadAll(JSON.parse(localStorage.rawData));
+    articleView.initIndexPage();
 
   } else {
-    // TODO: When we don't already have the rawData,
-    // we need to retrieve the JSON file from the server with AJAX (which jQuery method is best for this?),
-    // cache it in localStorage so we can skip the server call next time,
-    // then load all the data into Article.all with the .loadAll function above,
-    // and then render the index page.
-      Article.getAll();
-  };
+    Article.getAll();
+  }
 }
