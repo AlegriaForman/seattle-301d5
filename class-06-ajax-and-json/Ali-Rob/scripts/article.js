@@ -66,13 +66,10 @@ Article.fetchAll = function() {
       localStorage.eTag = eTag;
     } else {
       Article.loadAll(JSON.parse(localStorage.rawData));
-
       articleView.initIndexPage(); //TODO: What method do we call to render the index page?
-
     }
   }
 });
-
   } else {
     // TODO: When we don't already have the rawData,
     // we need to retrieve the JSON file from the server with AJAX (which jQuery method is best for this?),
